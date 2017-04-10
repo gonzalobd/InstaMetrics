@@ -118,7 +118,7 @@ def saveLikesPerWindow(x):
             try:
                 session.execute(insertStart + time + insertEnd)
             except:
-                print "insert not executed: ", insertStart, count, insertMiddle, time, insertEnd
+                print "insert not executed: ", insertStart, count, time, insertEnd
         else:
             currentMax = query[0].max
             if int(count) > int(currentMax):
