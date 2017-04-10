@@ -10,9 +10,8 @@ from datetime import datetime
 
 '''Lo que quiero obtener es:
 
-    -numero de likes en cada segmento de 10 minutos (2017-12-01 17:3*, 2017-12-01 17:4*
-    2017-12-01 17:5*, etc) (tabla en cassandra: likesPerWindow)
-    -numero de comentarios en cada segmento de 10 minutos (tabla en cassandra: commentsPerWindow)
+    -numero de likes acumulados  (tabla en cassandra: likesPerWindow)
+    -numero de comentarios  acumulados (tabla en cassandra: commentsPerWindow)
     -Tener una actualizacion wordcount de las 10 palabras mas citadas en los comentarios en cada segmento
     de 10 minutos (tabla en cassandra: wordcountHist)
     -Saber cual es mi maximo historico de comentarios y likes y en que segmento de 10 minutos fue
