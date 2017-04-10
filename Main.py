@@ -178,7 +178,7 @@ comments=kvsComment.map(lambda x:x[1]).map(lambda x:x.split(','))\
 
 commentWordCount=comments.flatMap(lambda x:x.text.split(' ')).\
     map(lambda x:x.replace('"text":','').replace('"',"").replace("'","").replace("(","")
-        .replace(")","").replace(",","")).map(lambda x:(x,1)).\
+        .replace(")","").replace(",","").replace(".","")).map(lambda x:(x,1)).\
     reduceByKey(lambda a,b:a+b).updateStateByKey(order).\
     transform(lambda rdd: rdd.sortBy(lambda (x,v): -v)).\
     foreachRDD(saveWordCountInDb)
