@@ -57,13 +57,13 @@ def saveCommentsPerWindow(x):
         time=str(datetime.now())[0:15]
         cluster = Cluster()
         session = cluster.connect('instagram')
-        session.execute("create table if not exists commentsPerWindow (time text PRIMARY KEY, count counter)")
+        session.execute("create table if not exists commentsPerWindow (time bigint PRIMARY KEY, count counter)")
         session.execute("create table if not exists maxComments (max int PRIMARY KEY, time text)")
         updateStart="update commentsPerWindow set count=count+"
-        updateMiddle=" where time='"
-        updateEnd="'"
+        updateEnd=" where time=toUnixTimestamp(now())"
+
         try:
-            session.execute(updateStart+count+updateMiddle+time+updateEnd)
+            session.execute(updateStart+count+updateEnd)
         except:
             print "update not executed: ",count," ",time
 
@@ -73,13 +73,12 @@ def saveCommentsPerWindow(x):
 
         query=session.execute("select * from maxComments").current_rows
         if query==[]:
-            insertStart="insert into maxComments (max,time) values ("
-            insertMiddle=",'"
+            insertStart="insert into maxComments (max,time) values (0,'"
             insertEnd="')"
             try:
-                session.execute(insertStart+count+insertMiddle+time+insertEnd)
+                session.execute(insertStart+time+insertEnd)
             except:
-                print "insert not executed: ",insertStart,count,insertMiddle,time,insertEnd
+                print "insert not executed: ",insertStart,time,insertEnd
         else:
             currentMax=query[0].max
             if int(count)>int(currentMax):
@@ -100,13 +99,12 @@ def saveLikesPerWindow(x):
         time=str(datetime.now())[0:15]
         cluster = Cluster()
         session = cluster.connect('instagram')
-        session.execute("create table if not exists likesPerWindow (time text PRIMARY KEY, count counter)")
+        session.execute("create table if not exists likesPerWindow (time bigint PRIMARY KEY, count counter)")
         session.execute("create table if not exists maxLikes (max int PRIMARY KEY, time text)")
         updateStart="update likesPerWindow set count=count+"
-        updateMiddle=" where time='"
-        updateEnd="'"
+        updateEnd=" where time=toUnixTimestamp(now())"
         try:
-            session.execute(updateStart+count+updateMiddle+time+updateEnd)
+            session.execute(updateStart+count+updateEnd)
         except:
             print "update not executed: ",count," ",time
 
@@ -116,11 +114,10 @@ def saveLikesPerWindow(x):
 
         query = session.execute("select * from maxLikes").current_rows
         if query == []:
-            insertStart = "insert into maxLikes (max,time) values ("
-            insertMiddle = ",'"
+            insertStart = "insert into maxLikes (max,time) values (0,'"
             insertEnd = "')"
             try:
-                session.execute(insertStart + count + insertMiddle + time + insertEnd)
+                session.execute(insertStart + time + insertEnd)
             except:
                 print "insert not executed: ", insertStart, count, insertMiddle, time, insertEnd
         else:
@@ -169,8 +166,10 @@ def saveWordCountInDb(x):
         session.execute(startInsert + time + middleInsert + words + '''')''')
     session.shutdown()
 
-commentPerWindow=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).foreachRDD(saveCommentsPerWindow)
-likesPerWindow=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).foreachRDD(saveLikesPerWindow)
+commentPerWindow=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).\
+    updateStateByKey(order).foreachRDD(saveCommentsPerWindow)
+likesPerWindow=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b). updateStateByKey(order)\
+    .foreachRDD(saveLikesPerWindow)
 
 comments=kvsComment.map(lambda x:x[1]).map(lambda x:x.split(','))\
     .map(lambda p: Row(created_time=p[0],
