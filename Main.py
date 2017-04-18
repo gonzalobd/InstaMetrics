@@ -4,6 +4,7 @@ from pyspark import SparkContext
 from pyspark.sql import Row
 from cassandra.cluster import Cluster
 from datetime import datetime
+from StopWords import stopWords
 
 
 '''Code by Gonzalo Bautista April-2017 '''
@@ -176,9 +177,12 @@ comments=kvsComment.map(lambda x:x[1]).map(lambda x:x.split(','))\
                                         text=p[2],
                                         username=p[3])).cache()
 
+
+
 commentWordCount=comments.flatMap(lambda x:x.text.split(' ')).\
     map(lambda x:x.replace('"text":','').replace('"',"").replace("'","").replace("(","")
-        .replace(")","").replace(",","").replace(".","")).map(lambda x:(x,1)).\
+        .replace(")","").replace(",","").replace(".","")).\
+    filter(lambda word: word not in stopWords).map(lambda x:(x,1)).\
     reduceByKey(lambda a,b:a+b).updateStateByKey(order).\
     transform(lambda rdd: rdd.sortBy(lambda (x,v): -v)).\
     foreachRDD(saveWordCountInDb)
