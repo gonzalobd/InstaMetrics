@@ -5,6 +5,7 @@ from pyspark.sql import Row
 from cassandra.cluster import Cluster
 from datetime import datetime
 from StopWords import stopWords
+import sys
 
 
 '''Code by Gonzalo Bautista April-2017 '''
@@ -39,9 +40,12 @@ sc = SparkContext()
 ssc = StreamingContext(sc, 5)
 
 ssc.checkpoint("checkpoint")
-brokers = "localhost:9092"
+#brokers = "localhost:9092"
+brokers=sys.argv[1]
 topiccomment = "comment"
 topiclike = "like"
+
+cassandra=sys.argv[2]
 
 kvsComment = KafkaUtils.createDirectStream(ssc, [topiccomment], {"metadata.broker.list": brokers})
 kvsLike = KafkaUtils.createDirectStream(ssc, [topiclike], {"metadata.broker.list": brokers})
@@ -55,7 +59,7 @@ def saveCommentsPerWindow(x):
     def f(a):
         count=str(a[1])
         time=str(datetime.now())[0:15]
-        cluster = Cluster()
+        cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists commentsPerWindow (time bigint PRIMARY KEY, count counter)")
         session.execute("create table if not exists maxComments (max int PRIMARY KEY, time text)")
@@ -97,7 +101,7 @@ def saveLikesPerWindow(x):
     def f(a):
         count=str(a[1])
         time=str(datetime.now())[0:15]
-        cluster = Cluster()
+        cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists likesPerWindow (time bigint PRIMARY KEY, count counter)")
         session.execute("create table if not exists maxLikes (max int PRIMARY KEY, time text)")
@@ -137,7 +141,7 @@ def saveLikesPerWindow(x):
 
 
 def saveWordCountInDb(x):
-    cluster = Cluster()
+    cluster = Cluster([cassandra])
     session = cluster.connect('instagram')
     rdd=x.map(lambda x:(str(x[0]),x[1])).take(10)
     words=str(rdd).replace("'","")
