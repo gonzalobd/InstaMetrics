@@ -15,6 +15,7 @@ RUN \
     sudo easy_install pip && \
     sudo git clone https://github.com/mumrah/kafka-python && \
     sudo pip install kafka-python && \
+    sudo pip install cassandra-driver && \
     cd $SPARK_HOME/lib && \
     wget http://central.maven.org/maven2/org/apache/spark/spark-streaming-kafka-assembly_2.11/1.6.3/spark-streaming-kafka-assembly_2.11-1.6.3.jar
 
