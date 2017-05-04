@@ -14,7 +14,10 @@ RUN \
 	wget -q http://apache.rediris.es/spark/spark-"$SPARK_VERSION"/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION".tgz -O /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \
 	tar xfz /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz -C /opt && \
     rm /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \
-    echo -e "export SPARK_HOME=/opt/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION"\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/pyspark" >> ~/.bashrc && \
+    export SPARK_HOME=/opt/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION" && \
+    export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python && \
+    export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.10.4-src.zip && \
+    export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/pyspark && \
     cd $SPARK_HOME && \
     easy_install pip && \
     git clone https://github.com/mumrah/kafka-python && \
