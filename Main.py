@@ -217,7 +217,7 @@ likesPerWindow=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).forea
 
 
 
-comments=kvsComment.map(lambda x:x[1]).map(lambda x:x.split(','))\
+comments=kvsComment.map(lambda x:x[1].encode('utf-8')).map(lambda x:x.split(','))\
     .map(lambda p: Row(text=p[0],
                                         username=p[1],
                                         created_time=p[2],
