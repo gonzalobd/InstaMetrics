@@ -12,8 +12,8 @@ import sys
 
 '''Lo que quiero obtener es:
 
-    -numero de likes acumulados  (tabla en cassandra: likesPerWindow)
-    -numero de comentarios  acumulados (tabla en cassandra: commentsPerWindow)
+    -numero de likes acumulados y por ventana de 10 min (tablas en cassandra: likesAccum y likesPerWindow)
+    -numero de comentarios  acumulados y por ventana de 10 min(tablas en cassandra: commentsAccum commentsPerWindow)
     -Tener una actualizacion wordcount de las 10 palabras mas citadas en los comentarios en cada segmento
     de 10 minutos (tabla en cassandra: wordcountHist)
     -Saber cual es mi maximo historico de comentarios y likes y en que segmento de 10 minutos fue
@@ -54,6 +54,44 @@ def order (new_value, last_value):
     if last_value is None:
         last_value = 0
     return sum(new_value, last_value)
+
+def saveCommentsAccum(x):
+    def f(a):
+        count=str(a[1])
+        time=str(datetime.now())[0:15]
+        cluster = Cluster([cassandra])
+        session = cluster.connect('instagram')
+        session.execute("create table if not exists commentsAccum (time bigint PRIMARY KEY, count counter)")
+        session.execute("create table if not exists maxComments (max int PRIMARY KEY, time text)")
+        updateStart="update commentsAccum set count=count+"
+        updateEnd=" where time=toUnixTimestamp(now())"
+
+        try:
+            session.execute(updateStart+count+updateEnd)
+        except:
+            print "update not executed: ",count," ",time
+
+        session.shutdown()
+    x.foreach(f)
+
+def saveLikesAccum(x):
+    def f(a):
+        count=str(a[1])
+        time=str(datetime.now())[0:15]
+        cluster = Cluster([cassandra])
+        session = cluster.connect('instagram')
+        session.execute("create table if not exists likesAccum (time bigint PRIMARY KEY, count counter)")
+        session.execute("create table if not exists maxLikes (max int PRIMARY KEY, time text)")
+        updateStart="update likesAccum set count=count+"
+        updateEnd=" where time=toUnixTimestamp(now())"
+        try:
+            session.execute(updateStart+count+updateEnd)
+        except:
+            print "update not executed: ",count," ",time
+
+        session.shutdown()
+    x.foreach(f)
+
 
 def saveCommentsPerWindow(x):
     def f(a):
@@ -139,7 +177,6 @@ def saveLikesPerWindow(x):
     x.foreach(f)
 
 
-
 def saveWordCountInDb(x):
     cluster = Cluster([cassandra])
     session = cluster.connect('instagram')
@@ -170,10 +207,15 @@ def saveWordCountInDb(x):
         session.execute(startInsert + time + middleInsert + words + '''')''')
     session.shutdown()
 
-commentPerWindow=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).\
-    updateStateByKey(order).foreachRDD(saveCommentsPerWindow)
-likesPerWindow=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b). updateStateByKey(order)\
-    .foreachRDD(saveLikesPerWindow)
+commentAccum=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).\
+    updateStateByKey(order).foreachRDD(saveCommentsAccum)
+likesAccum=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b). updateStateByKey(order)\
+    .foreachRDD(saveLikesAccum)
+
+commentPerWindow=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).foreachRDD(saveCommentsPerWindow)
+likesPerWindow=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).foreachRDD(saveLikesPerWindow)
+
+
 
 comments=kvsComment.map(lambda x:x[1]).map(lambda x:x.split(','))\
     .map(lambda p: Row(text=p[0],
