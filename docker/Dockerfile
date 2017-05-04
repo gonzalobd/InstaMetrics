@@ -20,7 +20,7 @@ RUN \
     export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/pyspark && \
     cd $SPARK_HOME && \
     easy_install pip && \
-    git clone https://github.com/mumrah/kafka-python && \
+    # git clone https://github.com/mumrah/kafka-python && \
     pip install kafka-python && \
     pip install cassandra-driver && \
     cd $SPARK_HOME/lib && \
