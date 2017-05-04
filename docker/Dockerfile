@@ -6,7 +6,7 @@ ENV HADOOP_VERSION 2.7
 
 RUN \
 	apt-get update && \
-	apt-get install -y python python-dev python-pip python-setuptools build-essential git && \
+	apt-get install -y python python-dev python-pip python-setuptools build-essential git  && \
 	wget -q http://www.apache.org/dyn/closer.lua/spark/spark-"$SPARK_VERSION"/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION".tgz -O /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \	
 	tar xfz /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz -C /opt && \
     rm /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \
@@ -17,11 +17,12 @@ RUN \
     sudo pip install kafka-python && \
     sudo pip install cassandra-driver && \
     cd $SPARK_HOME/lib && \
-    wget http://central.maven.org/maven2/org/apache/spark/spark-streaming-kafka-assembly_2.11/1.6.3/spark-streaming-kafka-assembly_2.11-1.6.3.jar
+    wget http://central.maven.org/maven2/org/apache/spark/spark-streaming-kafka-assembly_2.11/1.6.3/spark-streaming-kafka-assembly_2.11-1.6.3.jar && \
+    cd / && \
+    git clone https://github.com/gonzalobd/InstaMetrics
+
 
 COPY entry.sh /
-COPY Main.py /
-COPY StopWords.py /
 RUN chmod +x /entry.sh
 
 ENTRYPOINT ["/entry.sh"]
