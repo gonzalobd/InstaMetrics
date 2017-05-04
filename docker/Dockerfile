@@ -16,10 +16,10 @@ RUN \
     rm /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \
     echo -e "export SPARK_HOME=/opt/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION"\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/pyspark" >> ~/.bashrc && \
     cd $SPARK_HOME && \
-    sudo easy_install pip && \
-    sudo git clone https://github.com/mumrah/kafka-python && \
-    sudo pip install kafka-python && \
-    sudo pip install cassandra-driver && \
+    easy_install pip && \
+    git clone https://github.com/mumrah/kafka-python && \
+    pip install kafka-python && \
+    pip install cassandra-driver && \
     cd $SPARK_HOME/lib && \
     wget http://central.maven.org/maven2/org/apache/spark/spark-streaming-kafka-assembly_2.11/1.6.3/spark-streaming-kafka-assembly_2.11-1.6.3.jar && \
     cd / && \
