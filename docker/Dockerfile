@@ -1,3 +1,7 @@
+# sudo docker build -t instametrics .
+# sudo docker run -d -p 9092:9092 -e BROKER_KAFKA=<IPBrokerKafka> -e CASSANDRA=<IPCassandra> instametrics
+# sudo docker exec -ti <id> bash
+
 FROM dockerfile/ubuntu
 
 ENV SPARK_VERSION 2.1.0
