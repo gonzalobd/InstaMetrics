@@ -176,10 +176,10 @@ likesPerWindow=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b). upda
     .foreachRDD(saveLikesPerWindow)
 
 comments=kvsComment.map(lambda x:x[1]).map(lambda x:x.split(','))\
-    .map(lambda p: Row(created_time=p[0],
-                                        media=p[1],
-                                        text=p[2],
-                                        username=p[3])).cache()
+    .map(lambda p: Row(text=p[0],
+                                        username=p[1],
+                                        created_time=p[2],
+                                        media=p[3])).cache()
 
 
 
