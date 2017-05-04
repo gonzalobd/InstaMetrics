@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="20d69164-093d-499d-8e61-e277588a3d14" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docker/Dockerfile" afterPath="$PROJECT_DIR$/docker/Dockerfile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docker/entry.sh" afterPath="$PROJECT_DIR$/docker/entry.sh" />
     </list>
     <ignored path="TFM.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,21 +34,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="entry.sh" pinned="false" current-in-tab="true">
+      <file leaf-file-name="entry.sh" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/docker/entry.sh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="3" column="120" lean-forward="false" selection-start-line="3" selection-start-column="120" selection-end-line="3" selection-end-column="120" />
+              <caret line="3" column="21" lean-forward="true" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docker/Dockerfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="1" column="92" lean-forward="true" selection-start-line="1" selection-start-column="92" selection-end-line="1" selection-end-column="92" />
+            <state relative-caret-position="340">
+              <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -89,8 +88,8 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/prueba.py" />
         <option value="$PROJECT_DIR$/Main.py" />
-        <option value="$PROJECT_DIR$/docker/Dockerfile" />
         <option value="$PROJECT_DIR$/docker/entry.sh" />
+        <option value="$PROJECT_DIR$/docker/Dockerfile" />
       </list>
     </option>
   </component>
@@ -457,14 +456,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docker/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="1" column="92" lean-forward="true" selection-start-line="1" selection-start-column="92" selection-end-line="1" selection-end-column="92" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/StopWords.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -478,7 +469,15 @@
     <entry file="file://$PROJECT_DIR$/docker/entry.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="3" column="120" lean-forward="false" selection-start-line="3" selection-start-column="120" selection-end-line="3" selection-end-column="120" />
+          <caret line="3" column="21" lean-forward="true" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding />
         </state>
       </provider>
