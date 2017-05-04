@@ -11,8 +11,8 @@ ENV HADOOP_VERSION 2.7
 RUN \
 	apt-get update && \
 	apt-get install -y python python-dev python-pip python-setuptools build-essential wget git  && \
-	wget -q http://www.apache.org/dyn/closer.lua/spark/spark-"$SPARK_VERSION"/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION".tgz -O /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \	
-	tar xfz /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz -C /opt && \
+	wget -q http://apache.rediris.es/spark/spark-"$SPARK_VERSION"/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION".tgz -O /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \
+	tar -xfz /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz -C /opt && \
     rm /tmp/spark_"$SPARK_VERSION"-"$HADOOP_VERSION".tgz && \
     echo -e "export SPARK_HOME=/opt/spark-"$SPARK_VERSION"-bin-hadoop"$HADOOP_VERSION"\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip\nexport PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/pyspark" >> ~/.bashrc && \
     cd $SPARK_HOME && \
