@@ -221,7 +221,7 @@ comments=kvsComment.map(lambda x:x[1].encode('utf-8')).map(lambda x:x.split(',')
     .map(lambda p: Row(text=p[0],
                                         username=p[1],
                                         created_time=p[2],
-                                        media=p[3])).cache()
+                                        media=p[3]))
 
 
 
