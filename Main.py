@@ -1,11 +1,11 @@
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark import SparkContext
-from pyspark.sql import Row
 from cassandra.cluster import Cluster
 from datetime import datetime
 from StopWords import stopWords
 import sys
+import json
 
 
 '''Code by Gonzalo Bautista April-2017 '''
@@ -158,22 +158,20 @@ commentAccum=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).\
 likesAccum=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b). updateStateByKey(order)\
     .foreachRDD(saveLikesAccum)
 
-commentPerWindow=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).foreachRDD(saveCommentsPerWindow)
-likesPerWindow=kvsLike.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).foreachRDD(saveLikesPerWindow)
+commentPerWindow=kvsComment.map(lambda x: (x[0],1)).\
+    reduceByKey(lambda a,b:a+b).foreachRDD(saveCommentsPerWindow)
+likesPerWindow=kvsLike.map(lambda x: (x[0],1)).\
+    reduceByKey(lambda a,b:a+b).foreachRDD(saveLikesPerWindow)
 
 
 
-comments=kvsComment.map(lambda x:x[1].encode('utf-8')).map(lambda x:x.split(','))\
-    .map(lambda p: Row(text=p[0],
-                                        username=p[1],
-                                        created_time=p[2],
-                                        media=p[3]))
+comments=kvsComment.map(lambda x:x[1]).map(lambda x: json.loads(x)['text'].encode('utf-8'))
 
 
 
-commentWordCount=comments.flatMap(lambda x:x.text.split(' ')).\
-    map(lambda x:x.replace('"text":','').replace('"',"").replace("'","").replace("(","")
-        .replace(")","").replace(",","").replace(".","")).\
+commentWordCount=comments.flatMap(lambda x:x.split(' ')).\
+    map(lambda x:x.replace('"text":','').replace('"',"").replace("'","").
+    replace("(","").replace(")","").replace(",","").replace(".","")).\
     filter(lambda word: word not in stopWords).map(lambda x:(x,1)).\
     reduceByKey(lambda a,b:a+b).updateStateByKey(order).\
     transform(lambda rdd: rdd.sortBy(lambda (x,v): -v)).\

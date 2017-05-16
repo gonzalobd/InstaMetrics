@@ -1,6 +1,6 @@
 
 
-stopWords=["a","actualmente","acuerdo","adelante","ademas","ademas","adrede",
+stopWords=["","a","actualmente","acuerdo","adelante","ademas","ademas","adrede",
            "afirmo","agrego","ahi","ahora","ahi","al","algo","alguna","algunas",
            "alguno","algunos","algun","alli","alli","alrededor","ambos","ampleamos",
            "antano","ante","anterior","antes","apenas","aproximadamente",
@@ -58,5 +58,5 @@ stopWords=["a","actualmente","acuerdo","adelante","ademas","ademas","adrede",
            "unos","usa","usais","usamos","usan","usar","usas","uso","usted","ustedes","v","va",
            "vais","valor","vamos","van","varias","varios","vaya","veces","ver","verdad","verdadera",
            "verdadero","vez","vosotras","vosotros","voy","vuestra","vuestras","vuestro",
-           "vuestros","w","x","y","ya","yo","z","el","esa","esas","ese","esos","esta","estas",
-           "este","estos","ultima","ultimas","ultimo","ultimos","xq","x","xa","xo"]
+           "vuestros","w","x","y","Y","ya","yo","z","el","esa","esas","ese","esos","esta","estas",
+           "este","estos","ultima","ultimas","ultimo","ultimos","xq","x","xa","xo","you"]
