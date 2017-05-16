@@ -16,8 +16,6 @@ import sys
     -numero de comentarios  acumulados y por ventana de 10 min(tablas en cassandra: commentsAccum commentsPerWindow)
     -Tener una actualizacion wordcount de las 10 palabras mas citadas en los comentarios en cada segmento
     de 10 minutos (tabla en cassandra: wordcountHist)
-    -Saber cual es mi maximo historico de comentarios y likes y en que segmento de 10 minutos fue
-    (tablas maxLikes y maxComents)
 
 IMPORTANTE:
 
@@ -62,7 +60,6 @@ def saveCommentsAccum(x):
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists commentsAccum (time bigint PRIMARY KEY, count counter)")
-        session.execute("create table if not exists maxComments (max int PRIMARY KEY, time text)")
         updateStart="update commentsAccum set count=count+"
         updateEnd=" where time=toUnixTimestamp(now())"
 
@@ -81,7 +78,6 @@ def saveLikesAccum(x):
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists likesAccum (time bigint PRIMARY KEY, count counter)")
-        session.execute("create table if not exists maxLikes (max int PRIMARY KEY, time text)")
         updateStart="update likesAccum set count=count+"
         updateEnd=" where time=toUnixTimestamp(now())"
         try:
@@ -100,7 +96,6 @@ def saveCommentsPerWindow(x):
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists commentsPerWindow (time bigint PRIMARY KEY, count counter)")
-        session.execute("create table if not exists maxComments (max int PRIMARY KEY, time text)")
         updateStart="update commentsPerWindow set count=count+"
         updateEnd=" where time=toUnixTimestamp(now())"
 
@@ -108,30 +103,6 @@ def saveCommentsPerWindow(x):
             session.execute(updateStart+count+updateEnd)
         except:
             print "update not executed: ",count," ",time
-
-        '''como en cassandra no puedo obtener maximos segun tengo
-        configurada la tabla, me creo una tabla donde
-        guardare cuando tuve mi maximo historico'''
-
-        query=session.execute("select * from maxComments").current_rows
-        if query==[]:
-            insertStart="insert into maxComments (max,time) values (0,'"
-            insertEnd="')"
-            try:
-                session.execute(insertStart+time+insertEnd)
-            except:
-                print "insert not executed: ",insertStart,time,insertEnd
-        else:
-            currentMax=query[0].max
-            if int(count)>int(currentMax):
-                session.execute("truncate table maxComments")
-                insertStart = "insert into maxComments (max,time) values ("
-                insertMiddle = ",'"
-                insertEnd = "')"
-                try:
-                    session.execute(insertStart + count + insertMiddle + time + insertEnd)
-                except:
-                    print "insert not executed: ",insertStart,count,insertMiddle,time,insertEnd
         session.shutdown()
     x.foreach(f)
 
@@ -142,37 +113,12 @@ def saveLikesPerWindow(x):
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists likesPerWindow (time bigint PRIMARY KEY, count counter)")
-        session.execute("create table if not exists maxLikes (max int PRIMARY KEY, time text)")
         updateStart="update likesPerWindow set count=count+"
         updateEnd=" where time=toUnixTimestamp(now())"
         try:
             session.execute(updateStart+count+updateEnd)
         except:
             print "update not executed: ",count," ",time
-
-        '''como en cassandra no puedo obtener maximos segun tengo
-                configurada la tabla, me creo una tabla donde
-                guardare cuando tuve mi maximo historico'''
-
-        query = session.execute("select * from maxLikes").current_rows
-        if query == []:
-            insertStart = "insert into maxLikes (max,time) values (0,'"
-            insertEnd = "')"
-            try:
-                session.execute(insertStart + time + insertEnd)
-            except:
-                print "insert not executed: ", insertStart, count, time, insertEnd
-        else:
-            currentMax = query[0].max
-            if int(count) > int(currentMax):
-                session.execute("truncate table maxLikes")
-                insertStart = "insert into maxLikes (max,time) values ("
-                insertMiddle = ",'"
-                insertEnd = "')"
-                try:
-                    session.execute(insertStart + count + insertMiddle + time + insertEnd)
-                except:
-                    print "insert not executed: ", insertStart, count, insertMiddle, time, insertEnd
         session.shutdown()
     x.foreach(f)
 
