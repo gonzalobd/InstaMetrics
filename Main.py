@@ -69,6 +69,7 @@ def saveCommentsAccum(x):
             print "update not executed: ",count," ",time
 
         session.shutdown()
+        cluster.shutdown()
     x.foreach(f)
 
 def saveLikesAccum(x):
@@ -86,6 +87,7 @@ def saveLikesAccum(x):
             print "update not executed: ",count," ",time
 
         session.shutdown()
+        cluster.shutdown()
     x.foreach(f)
 
 
@@ -104,6 +106,7 @@ def saveCommentsPerWindow(x):
         except:
             print "update not executed: ",count," ",time
         session.shutdown()
+        cluster.shutdown()
     x.foreach(f)
 
 def saveLikesPerWindow(x):
@@ -120,6 +123,7 @@ def saveLikesPerWindow(x):
         except:
             print "update not executed: ",count," ",time
         session.shutdown()
+        cluster.shutdown()
     x.foreach(f)
 
 
@@ -152,6 +156,7 @@ def saveWordCountInDb(x):
         middleInsert = "','"
         session.execute(startInsert + time + middleInsert + words + '''')''')
     session.shutdown()
+    cluster.shutdown()
 
 commentAccum=kvsComment.map(lambda x: (x[0],1)).reduceByKey(lambda a,b:a+b).\
     updateStateByKey(order).foreachRDD(saveCommentsAccum)
