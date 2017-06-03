@@ -56,7 +56,7 @@ def order (new_value, last_value):
 def saveCommentsAccum(x):
     def f(a):
         count=str(a[1])
-        time=str(datetime.now())[0:15]
+        time=str(datetime.now())
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists commentsAccum (time bigint PRIMARY KEY, count counter)")
@@ -75,7 +75,7 @@ def saveCommentsAccum(x):
 def saveLikesAccum(x):
     def f(a):
         count=str(a[1])
-        time=str(datetime.now())[0:15]
+        time=str(datetime.now())
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists likesAccum (time bigint PRIMARY KEY, count counter)")
@@ -94,7 +94,7 @@ def saveLikesAccum(x):
 def saveCommentsPerWindow(x):
     def f(a):
         count=str(a[1])
-        time=str(datetime.now())[0:15]
+        time=str(datetime.now())
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists commentsPerWindow (time bigint PRIMARY KEY, count counter)")
@@ -112,7 +112,7 @@ def saveCommentsPerWindow(x):
 def saveLikesPerWindow(x):
     def f(a):
         count=str(a[1])
-        time=str(datetime.now())[0:15]
+        time=str(datetime.now())
         cluster = Cluster([cassandra])
         session = cluster.connect('instagram')
         session.execute("create table if not exists likesPerWindow (time bigint PRIMARY KEY, count counter)")
