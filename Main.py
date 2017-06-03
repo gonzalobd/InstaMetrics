@@ -12,15 +12,15 @@ import json
 
 '''Lo que quiero obtener es:
 
-    -numero de likes acumulados y por ventana de 10 min (tablas en cassandra: likesAccum y likesPerWindow)
-    -numero de comentarios  acumulados y por ventana de 10 min(tablas en cassandra: commentsAccum commentsPerWindow)
-    -Tener una actualizacion wordcount de las 10 palabras mas citadas en los comentarios en cada segmento
+    -numero de likes acumulados y por ventana de 10 seg (tablas en cassandra: likesAccum y likesPerWindow)
+    -numero de comentarios  acumulados y por ventana de 10 seg(tablas en cassandra: commentsAccum commentsPerWindow)
+    -Ir actualizando cada 10 segundos las 10 palabras mas citadas en los comentarios en cada segmento
     de 10 minutos (tabla en cassandra: wordcountHist)
 
 IMPORTANTE:
 
 1:
-entrar en la consola de cassandra y crear el keyspace:
+arrancar cassnadra, entrar en la consola de cassandra y crear el keyspace:
 
 cqlsh> create keyspace instagram WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};
 
@@ -35,7 +35,7 @@ wget http://central.maven.org/maven2/org/apache/spark/spark-streaming-kafka-asse
 '''
 
 sc = SparkContext()
-ssc = StreamingContext(sc, 5)
+ssc = StreamingContext(sc, 10)
 
 ssc.checkpoint("checkpoint")
 #brokers = "localhost:9092"
