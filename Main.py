@@ -45,8 +45,8 @@ topiclike = "like"
 
 cassandra=sys.argv[2]
 
-kvsComment = KafkaUtils.createDirectStream(ssc, [topiccomment], {"metadata.broker.list": brokers, "auto.offset.reset":"smallest"})
-kvsLike = KafkaUtils.createDirectStream(ssc, [topiclike], {"metadata.broker.list": brokers,"auto.offset.reset":"smallest"})
+kvsComment = KafkaUtils.createDirectStream(ssc, [topiccomment], {"metadata.broker.list": brokers})
+kvsLike = KafkaUtils.createDirectStream(ssc, [topiclike], {"metadata.broker.list": brokers})
 
 def order (new_value, last_value):
     if last_value is None:
